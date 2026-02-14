@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tết Mã Đáo 2026 - Lì Xì Độc Bản | Hà Dương</title>
+    <style>
+        /* Giữ nguyên CSS gốc, nhưng thêm một chút cho wrap text */
+        .manifest-text { word-wrap: break-word; max-width: 300px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <!-- Giữ nguyên HTML -->
+    <script>
+        // Giữ nguyên archetypes và questions, nhưng thêm nhiều câu hỏi hơn
+        const questions = [
+            {
+                title: "Khi bắt đầu một dự án mới, bạn thường...",
+                options: [
+                    { text: "Phác thảo những ý tưởng điên rồ nhất", type: "CREATIVE" },
+                    { text: "Lập kế hoạch hành động chi tiết", type: "LEADER" },
+                    { text: "Lắng nghe xem mọi người cần gì", type: "HEALER" },
+                    { text: "Nghiên cứu sâu các dữ liệu liên quan", type: "WISE" }
+                ]
+            },
+            {
+                title: "Trong nhóm, bạn thường là người...",
+                options: [
+                    { text: "Đưa ra ý tưởng sáng tạo", type: "CREATIVE" },
+                    { text: "Lãnh đạo và quyết định", type: "LEADER" },
+                    { text: "Hỗ trợ và chăm sóc", type: "HEALER" },
+                    { text: "Phân tích và tư vấn", type: "WISE" }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let currentScore = { CREATIVE: 0, LEADER: 0, HEALER: 0, WISE: 0 };
+
+        function toQuiz() {
+            const name = document.getElementById('user-name').value.trim();
+            const dob = document.getElementById('user-dob').value;
+            if (!name) return alert("Hà Dương ơi, hãy nhập tên nhé!");
+            if (!dob) return alert("Hãy nhập ngày sinh để Vũ Trụ định danh chính xác hơn!");
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                finishQuiz();
+                return;
+            }
+            const q = questions[currentQuestionIndex];
+            document.getElementById('question-title').innerText = q.title;
+            const container = document.getElementById('quiz-options');
+            container.innerHTML = ''; // Clear previous options
+            q.options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.innerText = opt.text;
+                div.onclick = () => {
+                    currentScore[opt.type]++;
+                    currentQuestionIndex++;
+                    showQuestion();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function finishQuiz() {
+            const maxType = Object.keys(currentScore).reduce((a, b) => currentScore[a] > currentScore[b] ? a : b);
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+            renderLixi(maxType);
+        }
+
+        function renderLixi(typeKey) {
+            // Giữ nguyên, nhưng cải thiện wrap text cho manifest
+            const canvas = document.getElementById('liXiCanvas');
+            const ctx = canvas.getContext('2d');
+            const data = archetypes[typeKey];
+            const name = document.getElementById('user-name').value;
+            const manifest = document.getElementById('user-manifest').value || "Thành công rực rỡ";
+
+            // Vẽ nền và khung (giữ nguyên)
+            const grad = ctx.createLinearGradient(0, 0, 0, 600);
+            grad.addColorStop(0, "#d32f2f");
+            grad.addColorStop(1, "#8b0000");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 400, 600);
+            ctx.strokeStyle = "#ffd700";
+            ctx.lineWidth = 15;
+            ctx.strokeRect(20, 20, 360, 560);
+            ctx.lineWidth = 2;
+            ctx.strokeRect(35, 35, 330, 530);
+
+            // Icon và tên linh vật
+            ctx.font = "120px serif";
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#ffd700";
+            ctx.fillText(data.icon, 200, 220);
+            ctx.font = "bold 28px sans-serif";
+            ctx.fillText(data.name, 200, 300);
+
+            // Tên người dùng
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "22px sans-serif";
+            ctx.fillText("Chủ sở hữu: " + name, 200, 350);
+
+            // Wrap text cho manifest (đơn giản)
+            ctx.fillStyle = "#ffd700";
+            ctx.font = "italic 18px sans-serif";
+            const words = manifest.split(' ');
+            let line = '';
+            let y = 420;
+            words.forEach(word => {
+                const testLine = line + word + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > 300 && line !== '') {
+                    ctx.fillText('“' + line.trim() + '”', 200, y);
+                    line = word + ' ';
+                    y += 25;
+                } else {
+                    line = testLine;
+                }
+            });
+            ctx.fillText('“' + line.trim() + '”', 200, y);
+
+            // Chúc mừng
+            ctx.font = "bold 25px sans-serif";
+            ctx.fillText("CHÚC MỪNG NĂM MỚI 2026", 200, 500);
+
+            // Hiệu ứng bụi sao (giữ nguyên)
+            for (let i = 0; i < 30; i++) {
+                ctx.fillStyle = "rgba(255, 215, 0, 0.5)";
+                ctx.beginPath();
+                ctx.arc(Math.random() * 400, Math.random() * 600, Math.random() * 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function downloadLixi() {
+            const canvas = document.getElementById('liXiCanvas');
+            const link = document.createElement('a');
+            link.download = `Lixi_2026_${document.getElementById('user-name').value}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
